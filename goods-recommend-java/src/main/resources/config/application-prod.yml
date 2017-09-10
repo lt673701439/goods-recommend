@@ -5,7 +5,7 @@ spring:
     password: root
   data:
     mongodb:
-      uri: mongodb://localhost:27017/test
+      uri: mongodb://localhost:27017/goods
     elasticsearch:
       cluster-name: elasticsearch
       cluster-nodes: localhost:9300

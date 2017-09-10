@@ -1,7 +1,8 @@
 package com.oukingtim.mongo.web;
 
+import com.oukingtim.mongo.domain.Goods;
 import com.oukingtim.mongo.domain.MongoTest;
-import com.oukingtim.mongo.service.GetGoodsService;
+import com.oukingtim.mongo.service.GoodsService;
 import com.oukingtim.web.vm.ResultVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,27 +11,27 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/mongo")
-public class GetGoodsController {
+@RequestMapping(value = "/mongo/goods")
+public class GoodsController {
 
     @Autowired
-    private GetGoodsService getGoodsService;
+    private GoodsService goodsService;
 
     @GetMapping(value = "/getAllGoodsList")
     public ResultVM getAllGoodsList(){
-        List<MongoTest> list = getGoodsService.getAllGoodsList();
+        List<Goods> list = goodsService.getAllGoodsList();
         return ResultVM.ok(list);
     }
 
     @GetMapping(value = "/getGoodsById")
     public ResultVM getGoodsById(@RequestParam String id){
-        MongoTest mongoTest = getGoodsService.getGoodsById(id);
-        return ResultVM.ok(mongoTest);
+        Goods goods = goodsService.getGoodsById(id);
+        return ResultVM.ok(goods);
     }
 
     @GetMapping(value = "/getGoodsByCondition")
     public ResultVM getGoodsByCondition(@RequestParam Map<String,Object> map){
-        List<MongoTest> list = getGoodsService.getGoodsByCondition(map);
+        List<Goods> list = goodsService.getGoodsByCondition(map);
         return ResultVM.ok(list);
     }
 }

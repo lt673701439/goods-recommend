@@ -4,11 +4,11 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.oukingtim.mongo.domain.Brands;
 import com.oukingtim.mongo.domain.MongoTest;
-import com.oukingtim.mongo.repository.GetGoodsRepos;
-import com.oukingtim.mongo.service.GetGoodsService;
+import com.oukingtim.mongo.repository.BrandsRepos;
+import com.oukingtim.mongo.service.BrandsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,34 +17,30 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 @Service
-public class GetGoodsServiceImpl implements GetGoodsService {
+public class BrandsServiceImpl extends BaseServiceImpl implements BrandsService {
 
     @Autowired
-    private GetGoodsRepos getGoodsRepos;//继承了MongoRepository
-
-    @Autowired
-    private MongoTemplate mongoTemplate;//MongoTemplate封装了很多方法
+    private BrandsRepos brandsRepos;
 
     @Override
-    public List<MongoTest> getAllGoodsList() {
-        return getGoodsRepos.findAll();
+    public List<Brands> getAllBrandsList() {
+        return brandsRepos.findAll();
     }
 
     @Override
-    public MongoTest getGoodsById(String id) {
-        return getGoodsRepos.findOne(id);
+    public Brands getBrandsById(String id) {
+        return brandsRepos.findOne(id);
     }
 
     @Override
-    public List<MongoTest> getGoodsByCondition(Map<String, Object> map) {
-        DBCollection dbCollection = mongoTemplate.getCollection("mongoTest");
+    public List<MongoTest> getBrandsByCondition(Map<String, Object> map) {
+        DBCollection dbCollection = mongoTemplate.getCollection("brands");
         BasicDBObject basicDBObject = new BasicDBObject();
 
         Pattern pattern = Pattern.compile("^.*" + map.get("name")
                 + ".*$", Pattern.CASE_INSENSITIVE);//模糊查询
-//        basicDBObject.put("name", "张三");
         basicDBObject.put("name", pattern);
-        basicDBObject.put("age", Integer.parseInt(map.get("age").toString()));//等值查询
+        basicDBObject.put("area", map.get("area").toString());//等值查询
         DBCursor dbCursor = dbCollection.find(basicDBObject);
 
         List list = new ArrayList();
