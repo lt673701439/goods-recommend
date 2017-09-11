@@ -1,7 +1,6 @@
 package com.oukingtim.mongo.service;
 
 import com.oukingtim.mongo.domain.Brands;
-import com.oukingtim.mongo.domain.MongoTest;
 
 import java.util.List;
 import java.util.Map;
@@ -12,5 +11,7 @@ public interface BrandsService {
 
     Brands getBrandsById(String id);
 
-    List getBrandsByCondition(Map<String, Object> map);
+    List<Brands> getBrandsByCondition(Map<String, Object> map);
+
+    Long getBrandsCount();
 }

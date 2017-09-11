@@ -5,7 +5,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.oukingtim.mongo.domain.Brands;
-import com.oukingtim.mongo.domain.MongoTest;
 import com.oukingtim.mongo.repository.BrandsRepos;
 import com.oukingtim.mongo.service.BrandsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,7 @@ public class BrandsServiceImpl extends BaseServiceImpl implements BrandsService 
     }
 
     @Override
-    public List<MongoTest> getBrandsByCondition(Map<String, Object> map) {
+    public List<Brands> getBrandsByCondition(Map<String, Object> map) {
         DBCollection dbCollection = mongoTemplate.getCollection("brands");
         BasicDBObject basicDBObject = new BasicDBObject();
 
@@ -50,6 +49,11 @@ public class BrandsServiceImpl extends BaseServiceImpl implements BrandsService 
             System.out.println(dbObject);
         }
         return list;
+    }
+
+    @Override
+    public Long getBrandsCount() {
+        return brandsRepos.count();
     }
 
 }

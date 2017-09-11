@@ -6,9 +6,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BaseServiceImpl implements BaseService {
+class BaseServiceImpl implements BaseService {
 
     @Autowired
-    public MongoTemplate mongoTemplate;//MongoTemplate封装了很多方法
+    MongoTemplate mongoTemplate;//MongoTemplate封装了很多方法
 
 }

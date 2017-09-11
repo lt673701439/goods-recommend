@@ -11,5 +11,9 @@ public interface GoodsService {
 
     Goods getGoodsById(String id);
 
-    List getGoodsByCondition(Map<String,Object> map);
+    List<Goods> getGoodsByCondition(Map<String,Object> map);
+
+    Long getGoodsCount();
+
+    List<Goods> getGoodsByBrandId(String brandId);
 }

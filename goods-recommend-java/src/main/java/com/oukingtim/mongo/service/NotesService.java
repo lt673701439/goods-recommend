@@ -12,5 +12,7 @@ public interface NotesService {
 
     Notes getNotesById(String id);
 
-    List getNotesByCondition(Map<String, Object> map);
+    List<Notes> getNotesByCondition(Map<String, Object> map);
+
+    Long getNotesCount();
 }

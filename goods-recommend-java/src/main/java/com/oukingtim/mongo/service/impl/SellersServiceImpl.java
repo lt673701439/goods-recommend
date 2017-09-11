@@ -4,7 +4,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.oukingtim.mongo.domain.MongoTest;
 import com.oukingtim.mongo.domain.Sellers;
 import com.oukingtim.mongo.repository.SellersRepos;
 import com.oukingtim.mongo.service.SellersService;
@@ -33,14 +32,14 @@ public class SellersServiceImpl extends BaseServiceImpl implements SellersServic
     }
 
     @Override
-    public List<MongoTest> getSellersByCondition(Map<String, Object> map) {
+    public List<Sellers> getSellersByCondition(Map<String, Object> map) {
         DBCollection dbCollection = mongoTemplate.getCollection("sellers");
         BasicDBObject basicDBObject = new BasicDBObject();
 
         Pattern pattern = Pattern.compile("^.*" + map.get("shopname")
                 + ".*$", Pattern.CASE_INSENSITIVE);//模糊查询
         basicDBObject.put("shopname", pattern);
-        basicDBObject.put("sendFrom", map.get("sendFrom").toString());//等值查询
+        basicDBObject.put("send_from", map.get("sendFrom").toString());//等值查询
         DBCursor dbCursor = dbCollection.find(basicDBObject);
 
         List list = new ArrayList();
@@ -50,6 +49,11 @@ public class SellersServiceImpl extends BaseServiceImpl implements SellersServic
             System.out.println(dbObject);
         }
         return list;
+    }
+
+    @Override
+    public Long getSellersCount() {
+        return sellersRepos.count();
     }
 
 }

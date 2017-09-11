@@ -48,4 +48,9 @@ public class NotesEventsServiceImpl extends BaseServiceImpl implements NotesEven
         return list;
     }
 
+    @Override
+    public Long getNotesEventsCount() {
+        return notesEventsRepos.count();
+    }
+
 }

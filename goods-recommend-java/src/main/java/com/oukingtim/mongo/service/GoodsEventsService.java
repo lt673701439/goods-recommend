@@ -12,5 +12,7 @@ public interface GoodsEventsService {
 
     GoodsEvents getGoodsEventsById(String id);
 
-    List getGoodsEventsByCondition(Map<String, Object> map);
+    List<GoodsEvents> getGoodsEventsByCondition(Map<String, Object> map);
+
+    Long getGoodsEventsCount();
 }

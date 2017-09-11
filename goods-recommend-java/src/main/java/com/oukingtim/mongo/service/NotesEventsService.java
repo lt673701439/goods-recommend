@@ -12,5 +12,7 @@ public interface NotesEventsService {
 
     NotesEvents getNotesEventsById(String id);
 
-    List getNotesEventsByCondition(Map<String, Object> map);
+    List<NotesEvents> getNotesEventsByCondition(Map<String, Object> map);
+
+    Long getNotesEventsCount();
 }

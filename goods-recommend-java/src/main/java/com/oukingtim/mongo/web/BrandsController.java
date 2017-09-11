@@ -36,4 +36,10 @@ public class BrandsController {
         List<Brands> list = brandsService.getBrandsByCondition(map);
         return ResultVM.ok(list);
     }
+
+    @GetMapping(value = "/getBrandsCount")
+    public ResultVM getBrandsCount(){
+        Long count = brandsService.getBrandsCount();
+        return ResultVM.ok(count);
+    }
 }

@@ -36,4 +36,11 @@ public class SellersController {
         List<Sellers> list = sellersService.getSellersByCondition(map);
         return ResultVM.ok(list);
     }
+
+    @GetMapping(value = "/getSellersCount")
+    public ResultVM getSellersCount(){
+        Long count = sellersService.getSellersCount();
+        return ResultVM.ok(count);
+    }
+
 }

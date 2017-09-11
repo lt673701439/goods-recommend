@@ -36,4 +36,11 @@ public class NotesController {
         List<Notes> list = NotesService.getNotesByCondition(map);
         return ResultVM.ok(list);
     }
+
+    @GetMapping(value = "/getNotesCount")
+    public ResultVM getNotesCount(){
+        Long count = NotesService.getNotesCount();
+        return ResultVM.ok(count);
+    }
+
 }

@@ -1,7 +1,6 @@
 package com.oukingtim.mongo.web;
 
 import com.oukingtim.mongo.domain.Goods;
-import com.oukingtim.mongo.domain.MongoTest;
 import com.oukingtim.mongo.service.GoodsService;
 import com.oukingtim.web.vm.ResultVM;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +31,18 @@ public class GoodsController {
     @GetMapping(value = "/getGoodsByCondition")
     public ResultVM getGoodsByCondition(@RequestParam Map<String,Object> map){
         List<Goods> list = goodsService.getGoodsByCondition(map);
+        return ResultVM.ok(list);
+    }
+
+    @GetMapping(value = "/getGoodsCount")
+    public ResultVM getGoodsCount(){
+        Long count = goodsService.getGoodsCount();
+        return ResultVM.ok(count);
+    }
+
+    @GetMapping(value = "/getGoodsByBrandId")
+    public ResultVM getGoodsByBrandId(@RequestParam String brandId){
+        List<Goods> list = goodsService.getGoodsByBrandId(brandId);
         return ResultVM.ok(list);
     }
 }

@@ -22,20 +22,27 @@ public class GoodsEventsController {
     private GoodsEventsService goodsEventsService;
 
     @GetMapping(value = "/getAllGoodsEventsList")
-    public ResultVM getAllGoodsList(){
+    public ResultVM getAllGoodsEventsList(){
         List<GoodsEvents> list = goodsEventsService.getAllGoodsEventsList();
         return ResultVM.ok(list);
     }
 
     @GetMapping(value = "/getGoodsEventsById")
-    public ResultVM getGoodsById(@RequestParam String id){
+    public ResultVM getGoodsEventsById(@RequestParam String id){
         GoodsEvents goodsEvents = goodsEventsService.getGoodsEventsById(id);
         return ResultVM.ok(goodsEvents);
     }
 
     @GetMapping(value = "/getGoodsEventsByCondition")
-    public ResultVM getGoodsByCondition(@RequestParam Map<String,Object> map){
+    public ResultVM getGoodsEventsByCondition(@RequestParam Map<String,Object> map){
         List<GoodsEvents> list = goodsEventsService.getGoodsEventsByCondition(map);
         return ResultVM.ok(list);
     }
+
+    @GetMapping(value = "/getGoodsEventsCount")
+    public ResultVM getGoodsEventsCount(){
+        Long count = goodsEventsService.getGoodsEventsCount();
+        return ResultVM.ok(count);
+    }
+
 }

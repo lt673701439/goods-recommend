@@ -4,7 +4,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.oukingtim.mongo.domain.MongoTest;
 import com.oukingtim.mongo.domain.Notes;
 import com.oukingtim.mongo.repository.NotesRepos;
 import com.oukingtim.mongo.service.NotesService;
@@ -33,14 +32,14 @@ public class NotesServiceImpl extends BaseServiceImpl implements NotesService {
     }
 
     @Override
-    public List<MongoTest> getNotesByCondition(Map<String, Object> map) {
+    public List<Notes> getNotesByCondition(Map<String, Object> map) {
         DBCollection dbCollection = mongoTemplate.getCollection("notes");
         BasicDBObject basicDBObject = new BasicDBObject();
 
         Pattern pattern = Pattern.compile("^.*" + map.get("title")
                 + ".*$", Pattern.CASE_INSENSITIVE);//模糊查询
         basicDBObject.put("title", pattern);
-        basicDBObject.put("itemType", map.get("itemType").toString());//等值查询
+        basicDBObject.put("item_type", map.get("itemType").toString());//等值查询
         DBCursor dbCursor = dbCollection.find(basicDBObject);
 
         List list = new ArrayList();
@@ -50,6 +49,11 @@ public class NotesServiceImpl extends BaseServiceImpl implements NotesService {
             System.out.println(dbObject);
         }
         return list;
+    }
+
+    @Override
+    public Long getNotesCount() {
+        return notesRepos.count();
     }
 
 }

@@ -48,4 +48,9 @@ public class GoodsEventsServiceImpl extends BaseServiceImpl implements GoodsEven
         return list;
     }
 
+    @Override
+    public Long getGoodsEventsCount() {
+        return goodsEventsRepos.count();
+    }
+
 }

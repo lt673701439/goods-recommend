@@ -36,4 +36,10 @@ public class UsersController {
         List<Users> list = usersService.getUsersByCondition(map);
         return ResultVM.ok(list);
     }
+
+    @GetMapping(value = "/getUsersCount")
+    public ResultVM getUsersCount(){
+        Long count = usersService.getUsersCount();
+        return ResultVM.ok(count);
+    }
 }

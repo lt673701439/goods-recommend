@@ -4,7 +4,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.oukingtim.mongo.domain.MongoTest;
 import com.oukingtim.mongo.domain.Users;
 import com.oukingtim.mongo.repository.UsersRepos;
 import com.oukingtim.mongo.service.UsersService;
@@ -33,14 +32,14 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     @Override
-    public List<MongoTest> getUsersByCondition(Map<String, Object> map) {
+    public List<Users> getUsersByCondition(Map<String, Object> map) {
         DBCollection dbCollection = mongoTemplate.getCollection("users");
         BasicDBObject basicDBObject = new BasicDBObject();
 
         Pattern pattern = Pattern.compile("^.*" + map.get("nickname")
                 + ".*$", Pattern.CASE_INSENSITIVE);//模糊查询
         basicDBObject.put("nickname", pattern);
-        basicDBObject.put("fansTotal", Integer.parseInt(map.get("fansTotal").toString()));//等值查询
+        basicDBObject.put("fans_total", Integer.parseInt(map.get("fansTotal").toString()));//等值查询
         DBCursor dbCursor = dbCollection.find(basicDBObject);
 
         List list = new ArrayList();
@@ -52,4 +51,8 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
         return list;
     }
 
+    @Override
+    public Long getUsersCount() {
+        return usersRepos.count();
+    }
 }

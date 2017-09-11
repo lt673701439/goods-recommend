@@ -11,5 +11,7 @@ public interface UsersService {
 
     Users getUsersById(String id);
 
-    List getUsersByCondition(Map<String, Object> map);
+    List<Users> getUsersByCondition(Map<String, Object> map);
+
+    Long getUsersCount();
 }

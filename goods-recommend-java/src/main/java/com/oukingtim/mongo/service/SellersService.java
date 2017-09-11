@@ -11,5 +11,7 @@ public interface SellersService {
 
     Sellers getSellersById(String id);
 
-    List getSellersByCondition(Map<String, Object> map);
+    List<Sellers> getSellersByCondition(Map<String, Object> map);
+
+    Long getSellersCount();
 }
