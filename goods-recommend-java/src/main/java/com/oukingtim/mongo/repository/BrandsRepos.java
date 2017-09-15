@@ -5,4 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface BrandsRepos extends MongoRepository<Brands, String> {
 
+    Brands getByBrandsId(String brandsId);
 }

@@ -9,7 +9,7 @@ public interface SellersService {
 
     List<Sellers> getAllSellersList();
 
-    Sellers getSellersById(String id);
+    Sellers getBySellersId(String sellersId);
 
     List<Sellers> getSellersByCondition(Map<String, Object> map);
 

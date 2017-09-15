@@ -19,15 +19,15 @@ public class BrandsController {
     @Autowired
     private BrandsService brandsService;
 
-    @GetMapping(value = "/getAllBrandsList")
-    public ResultVM getAllBrandsList(){
-        List<Brands> list = brandsService.getAllBrandsList();
+    @GetMapping(value = "/getForPageList")
+    public ResultVM getForPageList(){
+        List<Brands> list = brandsService.getForPageList(2,5,"");
         return ResultVM.ok(list);
     }
 
-    @GetMapping(value = "/getBrandsById")
-    public ResultVM getBrandsById(@RequestParam String id){
-        Brands brands = brandsService.getBrandsById(id);
+    @GetMapping(value = "/getByBrandsId")
+    public ResultVM getByBrandsId(@RequestParam String brandsId){
+        Brands brands = brandsService.getByBrandsId(brandsId);
         return ResultVM.ok(brands);
     }
 

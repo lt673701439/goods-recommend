@@ -7,6 +7,7 @@ import com.mongodb.DBObject;
 import com.oukingtim.mongo.domain.Sellers;
 import com.oukingtim.mongo.repository.SellersRepos;
 import com.oukingtim.mongo.service.SellersService;
+import com.oukingtim.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,13 +28,13 @@ public class SellersServiceImpl extends BaseServiceImpl implements SellersServic
     }
 
     @Override
-    public Sellers getSellersById(String id) {
-        return sellersRepos.findOne(id);
+    public Sellers getBySellersId(String sellersId) {
+        return sellersRepos.getBySellersId(sellersId);
     }
 
     @Override
     public List<Sellers> getSellersByCondition(Map<String, Object> map) {
-        DBCollection dbCollection = mongoTemplate.getCollection("sellers");
+        DBCollection dbCollection = mongoTemplate.getCollection(Constants.Mongo.COLLECTION_SELLERS);
         BasicDBObject basicDBObject = new BasicDBObject();
 
         Pattern pattern = Pattern.compile("^.*" + map.get("shopname")
@@ -46,7 +47,6 @@ public class SellersServiceImpl extends BaseServiceImpl implements SellersServic
         while (dbCursor.hasNext()) {
             DBObject dbObject = dbCursor.next();
             list.add(dbObject);
-            System.out.println(dbObject);
         }
         return list;
     }

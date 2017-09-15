@@ -5,4 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface NotesEventsRepos extends MongoRepository<NotesEvents, String> {
 
+    NotesEvents getByNotesEventsId(String notesEventsId);
 }

@@ -7,6 +7,7 @@ import com.mongodb.DBObject;
 import com.oukingtim.mongo.domain.Brands;
 import com.oukingtim.mongo.repository.BrandsRepos;
 import com.oukingtim.mongo.service.BrandsService;
+import com.oukingtim.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,18 +23,18 @@ public class BrandsServiceImpl extends BaseServiceImpl implements BrandsService 
     private BrandsRepos brandsRepos;
 
     @Override
-    public List<Brands> getAllBrandsList() {
-        return brandsRepos.findAll();
+    public List<Brands> getForPageList(int pageNumber, int pageSize, String sortType) {
+        return super.getPageList(brandsRepos,pageNumber,pageSize,sortType);
     }
 
     @Override
-    public Brands getBrandsById(String id) {
-        return brandsRepos.findOne(id);
+    public Brands getByBrandsId(String brandsId) {
+        return brandsRepos.getByBrandsId(brandsId);
     }
 
     @Override
     public List<Brands> getBrandsByCondition(Map<String, Object> map) {
-        DBCollection dbCollection = mongoTemplate.getCollection("brands");
+        DBCollection dbCollection = mongoTemplate.getCollection(Constants.Mongo.COLLECTION_BRANDS);
         BasicDBObject basicDBObject = new BasicDBObject();
 
         Pattern pattern = Pattern.compile("^.*" + map.get("name")
@@ -46,7 +47,6 @@ public class BrandsServiceImpl extends BaseServiceImpl implements BrandsService 
         while (dbCursor.hasNext()) {
             DBObject dbObject = dbCursor.next();
             list.add(dbObject);
-            System.out.println(dbObject);
         }
         return list;
     }

@@ -10,9 +10,9 @@ public interface GoodsEventsService {
 
     List<GoodsEvents> getAllGoodsEventsList();
 
-    GoodsEvents getGoodsEventsById(String id);
+    GoodsEvents getByGoodsEventsId(String goodsEventsId);
 
     List<GoodsEvents> getGoodsEventsByCondition(Map<String, Object> map);
 
-    Long getGoodsEventsCount();
+    Long getGoodsEventsCount(String date);
 }

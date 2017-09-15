@@ -10,9 +10,9 @@ public interface NotesEventsService {
 
     List<NotesEvents> getAllNotesEventsList();
 
-    NotesEvents getNotesEventsById(String id);
+    NotesEvents getByNotesEventsId(String notesEventsId);
 
     List<NotesEvents> getNotesEventsByCondition(Map<String, Object> map);
 
-    Long getNotesEventsCount();
+    Long getNotesEventsCount(String date);
 }

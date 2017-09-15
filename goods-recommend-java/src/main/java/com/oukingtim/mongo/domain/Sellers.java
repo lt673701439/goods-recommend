@@ -1,5 +1,6 @@
 package com.oukingtim.mongo.domain;
 
+import com.oukingtim.util.Constants;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -9,9 +10,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
  *
  */
 @Data
-@Document(collection = "sellers")
+@Document(collection = Constants.Mongo.COLLECTION_SELLERS)
 @EqualsAndHashCode(callSuper = false)
 public class Sellers {
+
+    @Field(value = "id")
+    private String SellersId;
 
     private String logistics;
 
@@ -37,8 +41,6 @@ public class Sellers {
     private Boolean priceGuarantee;
 
     private String follow;
-
-    private String id;
 
     @Field(value = "video_image_url")
     private String videoImageUrl;

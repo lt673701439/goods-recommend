@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface GoodsRepos extends MongoRepository<Goods, String> {
 
+    Goods getByGoodsId(String goodsId);
 
     List<Goods> getGoodsByBrandId(String brandId);
 }

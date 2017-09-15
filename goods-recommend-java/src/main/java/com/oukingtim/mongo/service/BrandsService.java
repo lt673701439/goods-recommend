@@ -7,9 +7,9 @@ import java.util.Map;
 
 public interface BrandsService {
 
-    List<Brands> getAllBrandsList();
+    List<Brands> getForPageList(int pageNumber, int pageSize, String sortType);
 
-    Brands getBrandsById(String id);
+    Brands getByBrandsId(String brandsId);
 
     List<Brands> getBrandsByCondition(Map<String, Object> map);
 

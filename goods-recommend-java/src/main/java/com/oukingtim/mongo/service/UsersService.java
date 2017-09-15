@@ -9,7 +9,7 @@ public interface UsersService {
 
     List<Users> getAllUsersList();
 
-    Users getUsersById(String id);
+    Users getByUsersId(String usersId);
 
     List<Users> getUsersByCondition(Map<String, Object> map);
 

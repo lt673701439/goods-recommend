@@ -25,9 +25,9 @@ public class SellersController {
         return ResultVM.ok(list);
     }
 
-    @GetMapping(value = "/getSellersById")
-    public ResultVM getSellersById(@RequestParam String id){
-        Sellers sellers = sellersService.getSellersById(id);
+    @GetMapping(value = "/getBySellersId")
+    public ResultVM getBySellersId(@RequestParam String sellersId){
+        Sellers sellers = sellersService.getBySellersId(sellersId);
         return ResultVM.ok(sellers);
     }
 

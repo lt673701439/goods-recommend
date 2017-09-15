@@ -1,5 +1,6 @@
 package com.oukingtim.mongo.domain;
 
+import com.oukingtim.util.Constants;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,11 +13,12 @@ import java.util.Map;
  *
  */
 @Data
-@Document(collection = "goods_events")
+@Document(collection = Constants.Mongo.COLLECTION_GOODS_EVENTS)
 @EqualsAndHashCode(callSuper = false)
 public class GoodsEvents {
 
-    private String id;
+    @Field(value = "id")
+    private String goodsEventsId;
 
     @Field(value = "insert_date")
     private String insertDate;

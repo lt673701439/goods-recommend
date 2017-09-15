@@ -7,6 +7,7 @@ import com.mongodb.DBObject;
 import com.oukingtim.mongo.domain.Users;
 import com.oukingtim.mongo.repository.UsersRepos;
 import com.oukingtim.mongo.service.UsersService;
+import com.oukingtim.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,13 +28,13 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
     }
 
     @Override
-    public Users getUsersById(String id) {
-        return usersRepos.findOne(id);
+    public Users getByUsersId(String usersId) {
+        return usersRepos.getByUsersId(usersId);
     }
 
     @Override
     public List<Users> getUsersByCondition(Map<String, Object> map) {
-        DBCollection dbCollection = mongoTemplate.getCollection("users");
+        DBCollection dbCollection = mongoTemplate.getCollection(Constants.Mongo.COLLECTION_USERS);
         BasicDBObject basicDBObject = new BasicDBObject();
 
         Pattern pattern = Pattern.compile("^.*" + map.get("nickname")
@@ -46,7 +47,6 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
         while (dbCursor.hasNext()) {
             DBObject dbObject = dbCursor.next();
             list.add(dbObject);
-            System.out.println(dbObject);
         }
         return list;
     }

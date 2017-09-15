@@ -5,4 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface SellersRepos extends MongoRepository<Sellers, String> {
 
+    Sellers getBySellersId(String sellersId);
 }

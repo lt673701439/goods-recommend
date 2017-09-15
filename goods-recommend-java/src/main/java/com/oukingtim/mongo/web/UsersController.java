@@ -25,9 +25,9 @@ public class UsersController {
         return ResultVM.ok(list);
     }
 
-    @GetMapping(value = "/getUsersById")
-    public ResultVM getUsersById(@RequestParam String id){
-        Users users = usersService.getUsersById(id);
+    @GetMapping(value = "/getByUsersId")
+    public ResultVM getByUsersId(@RequestParam String usersId){
+        Users users = usersService.getByUsersId(usersId);
         return ResultVM.ok(users);
     }
 

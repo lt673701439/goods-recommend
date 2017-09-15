@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface ESTestService {
 
-    List getAll();
+    List<ESTest> getAll();
+
+    List<ESTest> searchESTest(String keyWord);
 
     ESTest getById(String id);
 

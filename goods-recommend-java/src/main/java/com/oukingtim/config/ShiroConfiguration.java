@@ -56,6 +56,9 @@ public class ShiroConfiguration {
         filterMap.put("/styles/**", "anon");
         filterMap.put("/auth.html", "anon");
         filterMap.put("/index.html", "anon");
+        filterMap.put("/mongo/**", "anon");
+        filterMap.put("/es/**", "anon");
+        //不拦截的放上面
         filterMap.put("/**", "authc");
         shiroFilter.setFilterChainDefinitionMap(filterMap);
 

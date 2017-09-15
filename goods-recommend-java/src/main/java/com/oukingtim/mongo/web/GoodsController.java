@@ -2,12 +2,16 @@ package com.oukingtim.mongo.web;
 
 import com.oukingtim.mongo.domain.Goods;
 import com.oukingtim.mongo.service.GoodsService;
+import com.oukingtim.util.DateUtils;
 import com.oukingtim.web.vm.ResultVM;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/mongo/goods")
@@ -16,15 +20,15 @@ public class GoodsController {
     @Autowired
     private GoodsService goodsService;
 
-    @GetMapping(value = "/getAllGoodsList")
-    public ResultVM getAllGoodsList(){
-        List<Goods> list = goodsService.getAllGoodsList();
+    @GetMapping(value = "/getForPageList")
+    public ResultVM getForPageList(){
+        List<Goods> list = goodsService.getForPageList(0,10,"insertDate");
         return ResultVM.ok(list);
     }
 
-    @GetMapping(value = "/getGoodsById")
-    public ResultVM getGoodsById(@RequestParam String id){
-        Goods goods = goodsService.getGoodsById(id);
+    @GetMapping(value = "/getByGoodsId")
+    public ResultVM getByGoodsId(@RequestParam String goodsId){
+        Goods goods = goodsService.getByGoodsId(goodsId);
         return ResultVM.ok(goods);
     }
 
@@ -36,8 +40,20 @@ public class GoodsController {
 
     @GetMapping(value = "/getGoodsCount")
     public ResultVM getGoodsCount(){
-        Long count = goodsService.getGoodsCount();
+        Long count = goodsService.getGoodsCount("");
         return ResultVM.ok(count);
+    }
+
+    @GetMapping(value = "/getCountToday")
+    public List<Map<String ,Object>> getCountToday(){
+        String now = DateUtils.getDate();
+        Long count = goodsService.getGoodsCount(now);
+        Map<String,Object> map = new HashMap<>();
+        map.put("name", 0);
+        map.put("value", count);
+        List<Map<String ,Object>> list = new ArrayList();
+        list.add(map);
+        return list;
     }
 
     @GetMapping(value = "/getGoodsByBrandId")

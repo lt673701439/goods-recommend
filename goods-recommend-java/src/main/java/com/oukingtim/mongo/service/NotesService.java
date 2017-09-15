@@ -1,6 +1,5 @@
 package com.oukingtim.mongo.service;
 
-import com.oukingtim.mongo.domain.Goods;
 import com.oukingtim.mongo.domain.Notes;
 
 import java.util.List;
@@ -8,11 +7,11 @@ import java.util.Map;
 
 public interface NotesService {
 
-    List<Notes> getAllNotesList();
+    List<Notes> getForPageList(int pageNumber, int pageSize, String sortType);
 
-    Notes getNotesById(String id);
+    Notes getByNotesId(String notesId);
 
     List<Notes> getNotesByCondition(Map<String, Object> map);
 
-    Long getNotesCount();
+    Long getNotesCount(String date);
 }

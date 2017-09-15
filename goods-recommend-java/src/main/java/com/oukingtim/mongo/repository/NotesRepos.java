@@ -5,4 +5,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface NotesRepos extends MongoRepository<Notes, String> {
 
+    Notes getByNotesId(String notesID);
 }

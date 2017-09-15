@@ -7,13 +7,15 @@ import java.util.Map;
 
 public interface GoodsService {
 
-    List<Goods> getAllGoodsList();
+    List<Goods> getForPageList(int pageNumber, int pageSize, String sortType);
 
-    Goods getGoodsById(String id);
+    Goods getByGoodsId(String goodsId);
 
     List<Goods> getGoodsByCondition(Map<String,Object> map);
 
-    Long getGoodsCount();
+    Long getGoodsCount(String date);
+
+    List<Goods> getGoodsByDate(String date);
 
     List<Goods> getGoodsByBrandId(String brandId);
 }

@@ -5,10 +5,13 @@ spring:
     password: root
   data:
     mongodb:
-      uri: mongodb://localhost:27017/goods
+#      uri: mongodb://vps2:27017/xhs
+      uri: mongodb://127.0.0.1:27017/goods
     elasticsearch:
+#      cluster-name: elastic-bjc
+#      cluster-nodes: localhost:9300
       cluster-name: elasticsearch
-      cluster-nodes: localhost:9300
+      cluster-nodes: 127.0.0.1:9300
       local: true
       repositories:
         enable: true

@@ -3,6 +3,9 @@ package com.oukingtim.es.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oukingtim.es.domain.ESTest;
 import com.oukingtim.es.service.ESTestService;
+import com.oukingtim.mongo.domain.Brands;
+import com.oukingtim.mongo.domain.Goods;
+import com.oukingtim.mongo.service.BrandsService;
 import com.oukingtim.web.vm.ResultVM;
 import org.apache.ibatis.annotations.Delete;
 import org.elasticsearch.action.index.IndexResponse;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -26,26 +30,28 @@ public class ESTestController {
     @Autowired
     private ESTestService esTestService;
 
+    @Autowired
+    private BrandsService brandsService;
+
     @RequestMapping(value = "/insert")
     public ResultVM insert(@RequestParam Map<String,Object> map){
         boolean created = false;
+
         try {
-            ESTest esTest = new ESTest();
-            esTest.setId(map.get("id").toString());
-            esTest.setName(map.get("name").toString());
-            esTest.setAge(map.get("age").toString());
+//            List<Brands> list = brandsService.getForPageList(0,50,"");
             //Add transport addresses and do something with the client...
             Settings settings = Settings.settingsBuilder()
                     .put("cluster.name", "elasticsearch").build();
             // on startup
             TransportClient client = TransportClient.builder().settings(settings).build()
                     .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("localhost"), 9300));
-
-            IndexResponse response = client.prepareIndex("elastic", "estest", esTest.getId())
-                    .setSource(new ObjectMapper().writeValueAsString(esTest)
-                    )
-                    .get();
-            created = response.isCreated();
+//            for (Brands brands : list) {
+                IndexResponse response = client.prepareIndex("elastic", "estest")
+                        .setSource(new ObjectMapper().writeValueAsString(map)
+                        )
+                        .get();
+                created = response.isCreated();
+//            }
             client.close();// on shutdown
         } catch (IOException e) {
             e.printStackTrace();
@@ -53,6 +59,11 @@ public class ESTestController {
         return ResultVM.ok(created);
     }
 
+    @GetMapping(value = "/searchESTest")
+    public ResultVM searchESTest(String keyWord){
+        List<ESTest> list = esTestService.searchESTest(keyWord);
+        return ResultVM.ok(list);
+    }
     @GetMapping(value = "/getAll")
     public ResultVM getAll(){
         List<ESTest> list = esTestService.getAll();
@@ -74,8 +85,8 @@ public class ESTestController {
 
     /**
      * 未调通
-     * @param esTest
-     * @return
+     * @param esTest 参数
+     * @return 结果
      */
     @DeleteMapping(value = "delete")
     public ResultVM delete(@RequestParam ESTest esTest){
@@ -85,8 +96,8 @@ public class ESTestController {
 
     /**
      * 未调通
-     * @param esTest
-     * @return
+     * @param esTest 参数
+     * @return 结果
      */
     @DeleteMapping(value = "deleteAll")
     public ResultVM deleteAll(@RequestParam ESTest esTest){
