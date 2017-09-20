@@ -65,25 +65,23 @@ public class GoodsServiceImpl extends BaseServiceImpl implements GoodsService {
     }
 
     @Override
-    public List<Goods> getGoodsByDate(String date) {
-        List list = new ArrayList();
-        if (!"".equals(date)) {
-            DBCollection dbCollection = mongoTemplate.getCollection(Constants.Mongo.COLLECTION_GOODS);
-            BasicDBObject basicDBObject;
-            basicDBObject = new BasicDBObject().append("insert_date",
-                    new BasicDBObject().append(QueryOperators.GTE, date));
-            DBCursor dbCursor = dbCollection.find(basicDBObject);
-            while (dbCursor.hasNext()) {
-                DBObject dbObject = dbCursor.next();
-                list.add(dbObject);
-            }
-        }
-        return list;
+    public List<Goods> getGoodsByDate(String startDate,String endDate) {
+        return super.getByDate(Constants.Mongo.COLLECTION_GOODS,startDate,endDate);
     }
 
     @Override
     public List<Goods> getGoodsByBrandId(String brandId) {
         return goodsRepos.getGoodsByBrandId(brandId);
+    }
+
+    @Override
+    public List<Goods> getGoodsBySellerId(String sellerId) {
+        return goodsRepos.getGoodsBySellerId(sellerId);
+    }
+
+    @Override
+    public List<Goods> getGoodsByCategoryId(String categoryId) {
+        return goodsRepos.getGoodsByCategoryId(categoryId);
     }
 
 }

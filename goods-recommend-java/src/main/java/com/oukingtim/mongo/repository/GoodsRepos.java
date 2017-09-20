@@ -10,4 +10,9 @@ public interface GoodsRepos extends MongoRepository<Goods, String> {
     Goods getByGoodsId(String goodsId);
 
     List<Goods> getGoodsByBrandId(String brandId);
+
+    List<Goods> getGoodsBySellerId(String sellerId);
+
+    List<Goods> getGoodsByCategoryId(String categoryId);
+
 }

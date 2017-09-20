@@ -8,6 +8,7 @@ import com.oukingtim.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -170,6 +171,88 @@ public class BoardServiceImpl implements BoardService {
             list.add(map);
         }
         return list;
+    }
+
+    @Override
+    public List<Map> getGoodsList() {
+        List<Map> list = new ArrayList<>();
+
+        List<Goods> goodsList = goodsService.getForPageList(0,10,"insertDate");
+
+        for(Goods goods : goodsList) {
+            Map map = new HashMap();
+            map.put("id", goods.getGoodsId());
+            map.put("image", goods.getImage());
+
+            Map cmap = new HashMap();
+            cmap.put("name", goods.getName());
+            String str = goods.getUpdateTime() + "000";
+            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            cmap.put("updateTime", sf.format(new Date(Long.parseLong(str))));
+            cmap.put("updateDate", goods.getUpdateDate());
+            map.put("name", cmap);
+
+            cmap = new HashMap();
+            cmap.put("cname", goods.getCountry());
+            cmap.put("ename", getCountryEname(goods.getCountry()));
+            map.put("country", cmap);
+
+            cmap = new HashMap();
+            cmap.put("feature", goods.getFeature());
+            cmap.put("syblings", goods.getSyblings().size() + 1);
+            map.put("feature", cmap);
+
+            map.put("stock", goods.getStock());
+
+            map.put("price", goods.getPrice());
+
+            Double originalPrice = goods.getOriginalPrice() == null ? goods.getPrice() : goods.getOriginalPrice();
+            map.put("originalPrice", originalPrice);
+
+            list.add(map);
+        }
+        return list;
+    }
+
+    private String getCountryEname(String cname) {
+        Map<String, String> cnameMap = new HashMap<String, String>();
+        cnameMap.put("中国", "China");
+        cnameMap.put("美国", "USA");
+        cnameMap.put("日本", "Japan");
+        cnameMap.put("韩国", "Korea");
+        cnameMap.put("意大利", "Italy");
+        cnameMap.put("法国", "France");
+        cnameMap.put("英国", "England");
+        cnameMap.put("德国", "Germany");
+        cnameMap.put("澳大利亚", "Australia");
+        cnameMap.put("台湾", "Taiwan");
+        cnameMap.put("丹麦", "Denmark");
+        cnameMap.put("香港", "Hong Kong");
+        cnameMap.put("新加坡", "Singapore");
+        cnameMap.put("瑞士", "Switzerland");
+        cnameMap.put("新西兰", "New Zealand");
+        cnameMap.put("澳洲", "Australia");
+        cnameMap.put("加拿大", "Canada");
+        cnameMap.put("奥地利", "Austria");
+        cnameMap.put("西班牙", "Spain");
+        cnameMap.put("瑞典", "Sweden");
+        cnameMap.put("泰国", "Thailand");
+        cnameMap.put("巴西", "Brazil");
+        cnameMap.put("荷兰", "Netherlands");
+        cnameMap.put("希腊", "Greece");
+        cnameMap.put("摩纳哥", "Monaco");
+        cnameMap.put("比利时", "Belgium");
+        cnameMap.put("芬兰", "Finland");
+        cnameMap.put("以色列", "Israel");
+        cnameMap.put("中国香港", "Hong Kong");
+        cnameMap.put("爱尔兰", "Ireland");
+        cnameMap.put("挪威", "Norway");
+
+        if(cnameMap.containsKey(cname)) {
+            return cnameMap.get(cname);
+        }else {
+            return cnameMap.get("中国");
+        }
     }
 
 }

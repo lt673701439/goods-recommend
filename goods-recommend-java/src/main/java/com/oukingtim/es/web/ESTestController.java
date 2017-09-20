@@ -3,25 +3,19 @@ package com.oukingtim.es.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oukingtim.es.domain.ESTest;
 import com.oukingtim.es.service.ESTestService;
-import com.oukingtim.mongo.domain.Brands;
-import com.oukingtim.mongo.domain.Goods;
-import com.oukingtim.mongo.service.BrandsService;
+import com.oukingtim.mongo.domain.Notes;
+import com.oukingtim.mongo.service.NotesService;
 import com.oukingtim.web.vm.ResultVM;
-import org.apache.ibatis.annotations.Delete;
 import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
-import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 @RestController
 @RequestMapping(value = "/es")
@@ -31,28 +25,24 @@ public class ESTestController {
     private ESTestService esTestService;
 
     @Autowired
-    private BrandsService brandsService;
+    private NotesService importService;
+
+    @Autowired
+    private ElasticsearchTemplate elasticsearchTemplate;
 
     @RequestMapping(value = "/insert")
-    public ResultVM insert(@RequestParam Map<String,Object> map){
+    public ResultVM insert(){
         boolean created = false;
 
         try {
-//            List<Brands> list = brandsService.getForPageList(0,50,"");
-            //Add transport addresses and do something with the client...
-            Settings settings = Settings.settingsBuilder()
-                    .put("cluster.name", "elasticsearch").build();
-            // on startup
-            TransportClient client = TransportClient.builder().settings(settings).build()
-                    .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("localhost"), 9300));
-//            for (Brands brands : list) {
-                IndexResponse response = client.prepareIndex("elastic", "estest")
-                        .setSource(new ObjectMapper().writeValueAsString(map)
+            List<Notes> list = importService.getForPageList(0,100,"");
+            for (Notes obj: list) {
+                IndexResponse response = elasticsearchTemplate.getClient().prepareIndex("notes", "notes")
+                        .setSource(new ObjectMapper().writeValueAsString(obj)
                         )
                         .get();
                 created = response.isCreated();
-//            }
-            client.close();// on shutdown
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -84,24 +74,34 @@ public class ESTestController {
     }
 
     /**
-     * 未调通
-     * @param esTest 参数
+     * 按id删除
+     * @param id 参数
      * @return 结果
      */
-    @DeleteMapping(value = "delete")
-    public ResultVM delete(@RequestParam ESTest esTest){
-        esTestService.delete(esTest);
+    @RequestMapping(value = "delete")
+    public ResultVM delete(@RequestParam String id){
+        esTestService.delete(id);
         return ResultVM.ok();
     }
 
     /**
-     * 未调通
-     * @param esTest 参数
+     * 无效
      * @return 结果
      */
-    @DeleteMapping(value = "deleteAll")
-    public ResultVM deleteAll(@RequestParam ESTest esTest){
+    @RequestMapping(value = "deleteAll")
+    public ResultVM deleteAll(){
         esTestService.deleteAll();
+        return ResultVM.ok();
+    }
+
+    /**
+     * 按索引名称全部删除
+     * @param indexName 索引名称
+     * @return 结果
+     */
+    @RequestMapping(value = "deleteByIndexName")
+    public ResultVM deleteByIndexName(String indexName){
+        elasticsearchTemplate.deleteIndex(indexName);
         return ResultVM.ok();
     }
 }

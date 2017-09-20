@@ -1,7 +1,6 @@
 package com.oukingtim.es.web;
 
 import com.oukingtim.es.service.GoodsESService;
-import com.oukingtim.mongo.domain.Goods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

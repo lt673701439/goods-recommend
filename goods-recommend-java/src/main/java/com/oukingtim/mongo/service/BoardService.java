@@ -22,4 +22,6 @@ public interface BoardService {
     List<Map> getNotesImage();
 
     List<Map> getBrandsList();
+
+    List<Map> getGoodsList();
 }

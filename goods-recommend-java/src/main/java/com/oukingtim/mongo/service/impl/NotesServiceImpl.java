@@ -63,4 +63,9 @@ public class NotesServiceImpl extends BaseServiceImpl implements NotesService {
         }
     }
 
+    @Override
+    public List<Notes> getNotesByDate(String startDate, String endDate) {
+        return super.getByDate(Constants.Mongo.COLLECTION_NOTES,startDate,endDate);
+    }
+
 }

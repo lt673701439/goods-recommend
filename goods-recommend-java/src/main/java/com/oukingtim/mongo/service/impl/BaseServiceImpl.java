@@ -1,6 +1,8 @@
 package com.oukingtim.mongo.service.impl;
 
+import com.mongodb.*;
 import com.oukingtim.mongo.service.BaseService;
+import com.oukingtim.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -19,6 +21,7 @@ class BaseServiceImpl implements BaseService {
     @Autowired
     MongoTemplate mongoTemplate;//MongoTemplate封装了很多方法
 
+    @Override
     public List getPageList(MongoRepository repository, int pageNumber, int pageSize, String sortType) {
         //处理排序
         Sort sort = null;
@@ -33,6 +36,27 @@ class BaseServiceImpl implements BaseService {
         List list = new ArrayList();
         while (iterator.hasNext()) {
             list.add(iterator.next());
+        }
+        return list;
+    }
+
+    @Override
+    public List getByDate(String collectionName,String startDate, String endDate) {
+        List list = new ArrayList();
+        DBCollection dbCollection = mongoTemplate.getCollection(collectionName);
+        BasicDBObject basicDBObject = new BasicDBObject();
+        if (!"".equals(startDate)) {
+            basicDBObject.put(QueryOperators.GTE, startDate);
+        }
+        if (!"".equals(endDate)) {
+            basicDBObject.put(QueryOperators.LTE, endDate);
+        }
+        BasicDBObject searchObj = new BasicDBObject();
+        searchObj.put("insert_date",basicDBObject);
+        DBCursor dbCursor = dbCollection.find(searchObj);
+        while (dbCursor.hasNext()) {
+            DBObject dbObject = dbCursor.next();
+            list.add(dbObject);
         }
         return list;
     }

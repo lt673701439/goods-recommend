@@ -14,7 +14,7 @@ public interface ESTestService {
 
     List<ESTest> getByName(String name);
 
-    void delete(ESTest esTest);
+    void delete(String id);
 
     void deleteAll();
 }

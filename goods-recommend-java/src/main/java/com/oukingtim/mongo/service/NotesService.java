@@ -14,4 +14,6 @@ public interface NotesService {
     List<Notes> getNotesByCondition(Map<String, Object> map);
 
     Long getNotesCount(String date);
+
+    List<Notes> getNotesByDate(String startDate,String endDate);
 }

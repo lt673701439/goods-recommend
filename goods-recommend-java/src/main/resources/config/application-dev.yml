@@ -15,6 +15,13 @@ spring:
       local: true
       repositories:
         enable: true
+      index:
+        goods: goods
+        notes: notes
+      type:
+        goods: goods
+        notes: notes
+
 server:
   port: 8080
 

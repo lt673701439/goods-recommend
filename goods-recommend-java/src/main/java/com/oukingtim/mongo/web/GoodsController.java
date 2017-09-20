@@ -56,9 +56,28 @@ public class GoodsController {
         return list;
     }
 
+    @GetMapping(value = "/getGoodsByDate")
+    public ResultVM getGoodsByDate(String startDate,String endDate){
+        List<Goods> list = goodsService.getGoodsByDate(startDate,endDate);
+        return ResultVM.ok(list);
+    }
+
     @GetMapping(value = "/getGoodsByBrandId")
     public ResultVM getGoodsByBrandId(@RequestParam String brandId){
         List<Goods> list = goodsService.getGoodsByBrandId(brandId);
         return ResultVM.ok(list);
     }
+
+    @GetMapping(value = "/getGoodsBySellerId")
+    public ResultVM getGoodsBySellerId(@RequestParam String sellerId){
+        List<Goods> list = goodsService.getGoodsBySellerId(sellerId);
+        return ResultVM.ok(list);
+    }
+
+    @GetMapping(value = "/getGoodsByCategoryId")
+    public ResultVM getGoodsByCategoryId(@RequestParam String categoryId){
+        List<Goods> list = goodsService.getGoodsByCategoryId(categoryId);
+        return ResultVM.ok(list);
+    }
+
 }

@@ -1,15 +1,13 @@
 package com.oukingtim.es.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oukingtim.es.service.NotesESService;
-import com.oukingtim.mongo.domain.Notes;
-import com.oukingtim.util.Constants;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +22,16 @@ public class NotesESServiceImpl implements NotesESService{
     @Autowired
     private ElasticsearchTemplate elasticsearchTemplate;
 
+    @Value("${spring.data.elasticsearch.index.notes}")
+    private String index;
+
+    @Value("${spring.data.elasticsearch.type.notes}")
+    private String type;
+
     @Override
     public List<HashMap> searchNotes(String keyWord) {
-        SearchResponse response = elasticsearchTemplate.getClient().prepareSearch(Constants.ES.INDEX)
-                .setTypes(Constants.ES.TYPE_NOTES)
+        SearchResponse response = elasticsearchTemplate.getClient().prepareSearch(index)
+                .setTypes(type)
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                 .setQuery(QueryBuilders.multiMatchQuery(
                         keyWord,
@@ -41,12 +45,12 @@ public class NotesESServiceImpl implements NotesESService{
             try {
                 Map map = i.sourceAsMap();
                 HashMap hashMap = new HashMap();
-                hashMap.put("insertDate",map.get("insertDate"));
-                hashMap.put("notesId",map.get("notesId"));
+                hashMap.put("insert_date",map.get("insertDate"));
+                hashMap.put("id",map.get("notesId"));
                 hashMap.put("title",map.get("title"));
                 hashMap.put("time",map.get("time"));
                 hashMap.put("likes",map.get("likes"));
-                hashMap.put("itemType",map.get("itemType"));
+                hashMap.put("item_type",map.get("itemType"));
                 list.add(hashMap);
             } catch (Exception e) {
                 e.printStackTrace();

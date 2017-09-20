@@ -62,4 +62,7 @@ public class BoardController {
     @GetMapping(value = "/getBrandsList")
     public List<Map> getBrandsList() { return boardService.getBrandsList(); }
 
+    @GetMapping(value = "/getGoodsList")
+    public List<Map> getGoodsList() { return boardService.getGoodsList(); }
+
 }

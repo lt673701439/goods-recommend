@@ -1,15 +1,13 @@
 package com.oukingtim.es.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oukingtim.es.service.GoodsESService;
-import com.oukingtim.mongo.domain.Goods;
-import com.oukingtim.util.Constants;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +22,20 @@ public class GoodsESServiceImpl implements GoodsESService {
     @Autowired
     private ElasticsearchTemplate elasticsearchTemplate;
 
+    @Value("${spring.data.elasticsearch.index.goods}")
+    private String index;
+
+    @Value("${spring.data.elasticsearch.type.goods}")
+    private String type;
+
     @Override
     public List<HashMap> searchGoods(String keyWord) {
-        SearchResponse response = elasticsearchTemplate.getClient().prepareSearch(Constants.ES.INDEX)
-                .setTypes(Constants.ES.TYPE_GOODS)
+        SearchResponse response = elasticsearchTemplate.getClient().prepareSearch(index)
+                .setTypes(type)
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                 .setQuery(QueryBuilders.multiMatchQuery(
                         keyWord,
-                        "spu_name", "short_name", "name", "feature"
+                        "spuName", "shortName", "name", "feature"
                 ))
                 .setFrom(0).setSize(10).setExplain(true)
                 .get();
@@ -41,13 +45,13 @@ public class GoodsESServiceImpl implements GoodsESService {
             try {
                 Map map = i.sourceAsMap();
                 HashMap hashMap = new HashMap();
-                hashMap.put("goodsId",map.get("goodsId"));
-                hashMap.put("insertDate",map.get("insertDate"));
-                hashMap.put("brandId",map.get("brandId"));
-                hashMap.put("spuName",map.get("spuName"));
+                hashMap.put("id",map.get("goodsId"));
+                hashMap.put("insert_date",map.get("insertDate"));
+                hashMap.put("brand_id",map.get("brandId"));
+                hashMap.put("spu_name",map.get("spuName"));
                 hashMap.put("price",map.get("price"));
                 hashMap.put("name",map.get("name"));
-                hashMap.put("shortName",map.get("shortName"));
+                hashMap.put("short_name",map.get("shortName"));
                 hashMap.put("feature",map.get("feature"));
                 list.add(hashMap);
             } catch (Exception e) {

@@ -7,11 +7,6 @@ public final class Constants {
 
     public static final String SPRING_PROFILE_DEVELOPMENT = "dev";
 
-    public static class ES {
-        public static final String INDEX = "elastic";
-        public static final String TYPE_GOODS = "goods";
-        public static final String TYPE_NOTES = "notes";
-    }
     public static class Mongo {
         public static final String COLLECTION_BRANDS = "brands";
         public static final String COLLECTION_GOODS = "goods";
