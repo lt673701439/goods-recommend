@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Sellers {
 
     @Field(value = "id")
-    private String SellersId;
+    private String sellersId;
 
     private String logistics;
 

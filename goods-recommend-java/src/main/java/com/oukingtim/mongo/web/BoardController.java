@@ -5,6 +5,7 @@ import com.oukingtim.mongo.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -63,6 +64,18 @@ public class BoardController {
     public List<Map> getBrandsList() { return boardService.getBrandsList(); }
 
     @GetMapping(value = "/getGoodsList")
-    public List<Map> getGoodsList() { return boardService.getGoodsList(); }
+    public Map getGoodsList(@RequestParam int page, @RequestParam int limit) {
+        return boardService.getGoodsList(page, limit); }
 
+    @GetMapping(value = "/getSyblings")
+    public List<Map> getSyblings(@RequestParam String goodsid) {
+        return boardService.getSyblings(goodsid);
+    }
+
+    @GetMapping(value = "/getNotesList")
+    public Map getNotesList(@RequestParam int page, @RequestParam int limit) {
+        return boardService.getNotesList(page, limit); }
+
+    @GetMapping(value = "/test")
+    public Map test() { return boardService.test(); }
 }

@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/mongo/notes")
@@ -22,7 +24,7 @@ public class NotesController {
 
     @GetMapping(value = "/getForPageList")
     public ResultVM getForPageList(){
-        List<Notes> list = notesService.getForPageList(0,10,"insertDate");
+        List<Notes> list = notesService.getForPageList(0,10,"");
         return ResultVM.ok(list);
     }
 
@@ -58,7 +60,7 @@ public class NotesController {
 
     @GetMapping(value = "/getNotesByDate")
     public ResultVM getNotesByDate(String startDate,String endDate){
-        List<Notes> list = notesService.getNotesByDate(startDate,endDate);
+        List<Notes> list = notesService.getNotesByDate(startDate,endDate,0,10,"");
         return ResultVM.ok(list);
     }
 

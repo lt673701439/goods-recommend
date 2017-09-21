@@ -1,14 +1,19 @@
 package com.oukingtim.mongo.service.impl;
 
-import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.QueryOperators;
 import com.oukingtim.mongo.domain.Goods;
 import com.oukingtim.mongo.repository.GoodsRepos;
 import com.oukingtim.mongo.service.GoodsService;
 import com.oukingtim.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -21,7 +26,13 @@ public class GoodsServiceImpl extends BaseServiceImpl implements GoodsService {
 
     @Override
     public List<Goods> getForPageList(int pageNumber, int pageSize, String sortType) {
-        return super.getPageList(goodsRepos, pageNumber, pageSize, sortType);
+        PageRequest pageRequest = super.getPageRequest(pageNumber, pageSize, sortType);
+        Iterator iterator = goodsRepos.findAll(pageRequest).iterator();
+        List<Goods> list = new ArrayList();
+        while (iterator.hasNext()) {
+            list.add((Goods) iterator.next());
+        }
+        return list;
     }
 
     @Override
@@ -40,10 +51,9 @@ public class GoodsServiceImpl extends BaseServiceImpl implements GoodsService {
         basicDBObject.put("stock", Integer.parseInt(map.get("stock").toString()));//等值查询
         DBCursor dbCursor = dbCollection.find(basicDBObject);
 
-        List list = new ArrayList();
+        List<Goods> list = new ArrayList();
         while (dbCursor.hasNext()) {
-            DBObject dbObject = dbCursor.next();
-            list.add(dbObject);
+            list.add((Goods)dbCursor.next());
         }
         return list;
     }
@@ -65,23 +75,41 @@ public class GoodsServiceImpl extends BaseServiceImpl implements GoodsService {
     }
 
     @Override
-    public List<Goods> getGoodsByDate(String startDate,String endDate) {
-        return super.getByDate(Constants.Mongo.COLLECTION_GOODS,startDate,endDate);
+    public List<Goods> getGoodsByDate(String startDate,String endDate,int pageNumber,int pageSize,String sortType) {
+        return super.getByDate(Constants.Mongo.COLLECTION_GOODS,startDate,endDate,pageNumber,pageSize,sortType);
     }
 
     @Override
-    public List<Goods> getGoodsByBrandId(String brandId) {
-        return goodsRepos.getGoodsByBrandId(brandId);
+    public List<Goods> getGoodsByBrandId(String brandId,int pageNumber, int pageSize, String sortType) {
+        PageRequest pageRequest = super.getPageRequest(pageNumber, pageSize, sortType);
+        Iterator iterator = goodsRepos.getGoodsByBrandId(brandId,pageRequest).iterator();
+        List<Goods> list = new ArrayList();
+        while (iterator.hasNext()) {
+            list.add((Goods) iterator.next());
+        }
+        return list;
     }
 
     @Override
-    public List<Goods> getGoodsBySellerId(String sellerId) {
-        return goodsRepos.getGoodsBySellerId(sellerId);
+    public List<Goods> getGoodsBySellerId(String sellerId,int pageNumber, int pageSize, String sortType) {
+        PageRequest pageRequest = super.getPageRequest(pageNumber, pageSize, sortType);
+        Iterator iterator = goodsRepos.getGoodsBySellerId(sellerId,pageRequest).iterator();
+        List<Goods> list = new ArrayList();
+        while (iterator.hasNext()) {
+            list.add((Goods) iterator.next());
+        }
+        return list;
     }
 
     @Override
-    public List<Goods> getGoodsByCategoryId(String categoryId) {
-        return goodsRepos.getGoodsByCategoryId(categoryId);
+    public List<Goods> getGoodsByCategoryId(String categoryId,int pageNumber,int pageSize,String sortType) {
+        PageRequest pageRequest = super.getPageRequest(pageNumber, pageSize, sortType);
+        Iterator iterator = goodsRepos.getGoodsByCategoryId(categoryId,pageRequest).iterator();
+        List<Goods> list = new ArrayList();
+        while (iterator.hasNext()) {
+            list.add((Goods) iterator.next());
+        }
+        return list;
     }
 
 }

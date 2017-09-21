@@ -3,15 +3,16 @@ package com.oukingtim.mongo.service.impl;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.oukingtim.mongo.domain.Brands;
 import com.oukingtim.mongo.repository.BrandsRepos;
 import com.oukingtim.mongo.service.BrandsService;
 import com.oukingtim.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -24,7 +25,13 @@ public class BrandsServiceImpl extends BaseServiceImpl implements BrandsService 
 
     @Override
     public List<Brands> getForPageList(int pageNumber, int pageSize, String sortType) {
-        return super.getPageList(brandsRepos,pageNumber,pageSize,sortType);
+        PageRequest pageRequest = super.getPageRequest(pageNumber, pageSize, sortType);
+        Iterator iterator = brandsRepos.findAll(pageRequest).iterator();
+        List<Brands> list = new ArrayList();
+        while (iterator.hasNext()) {
+            list.add((Brands) iterator.next());
+        }
+        return list;
     }
 
     @Override
@@ -43,10 +50,9 @@ public class BrandsServiceImpl extends BaseServiceImpl implements BrandsService 
         basicDBObject.put("area", map.get("area").toString());//等值查询
         DBCursor dbCursor = dbCollection.find(basicDBObject);
 
-        List list = new ArrayList();
+        List<Brands> list = new ArrayList();
         while (dbCursor.hasNext()) {
-            DBObject dbObject = dbCursor.next();
-            list.add(dbObject);
+            list.add((Brands) dbCursor.next());
         }
         return list;
     }

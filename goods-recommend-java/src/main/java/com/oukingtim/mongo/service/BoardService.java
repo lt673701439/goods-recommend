@@ -23,5 +23,11 @@ public interface BoardService {
 
     List<Map> getBrandsList();
 
-    List<Map> getGoodsList();
+    Map getGoodsList(int pageNumber, int pageSize);
+
+    List<Map> getSyblings(String goodsId);
+
+    Map getNotesList(int pageNumber, int pageSize);
+
+    Map test();
 }

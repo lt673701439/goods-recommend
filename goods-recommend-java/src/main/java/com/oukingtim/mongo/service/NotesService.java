@@ -15,5 +15,5 @@ public interface NotesService {
 
     Long getNotesCount(String date);
 
-    List<Notes> getNotesByDate(String startDate,String endDate);
+    List<Notes> getNotesByDate(String startDate,String endDate,int pageNumber,int pageSize,String sortType);
 }

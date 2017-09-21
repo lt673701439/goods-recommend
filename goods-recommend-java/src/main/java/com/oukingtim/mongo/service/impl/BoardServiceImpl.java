@@ -24,6 +24,12 @@ public class BoardServiceImpl implements BoardService {
     private BrandsService brandService;
 
     @Autowired
+    private SellersService sellersService;
+
+    @Autowired
+    private UsersService usersService;
+
+    @Autowired
     private GoodsEventsService goodsEventsService;
 
     @Autowired
@@ -174,33 +180,29 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<Map> getGoodsList() {
+    public Map getGoodsList(int pageNumber, int pageSize) {
         List<Map> list = new ArrayList<>();
 
-        List<Goods> goodsList = goodsService.getForPageList(0,10,"insertDate");
+        List<Goods> goodsList = goodsService.getForPageList(pageNumber, pageSize,"insertDate");
+
+        int startNum = (pageNumber - 1) * pageSize;
 
         for(Goods goods : goodsList) {
+            startNum++;
             Map map = new HashMap();
-            map.put("id", goods.getGoodsId());
+            map.put("id", startNum);
+            map.put("goodsid", goods.getGoodsId());
+            map.put("updateTime", goods.getUpdateTime());
+            map.put("name", goods.getName());
+            map.put("country", goods.getCountry());
+
             map.put("image", goods.getImage());
 
-            Map cmap = new HashMap();
-            cmap.put("name", goods.getName());
-            String str = goods.getUpdateTime() + "000";
-            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            cmap.put("updateTime", sf.format(new Date(Long.parseLong(str))));
-            cmap.put("updateDate", goods.getUpdateDate());
-            map.put("name", cmap);
+            map.put("updateDate", goods.getUpdateDate());
 
-            cmap = new HashMap();
-            cmap.put("cname", goods.getCountry());
-            cmap.put("ename", getCountryEname(goods.getCountry()));
-            map.put("country", cmap);
 
-            cmap = new HashMap();
-            cmap.put("feature", goods.getFeature());
-            cmap.put("syblings", goods.getSyblings().size() + 1);
-            map.put("feature", cmap);
+            map.put("feature", goods.getFeature());
+            map.put("syblings", goods.getSyblings().size() + 1);
 
             map.put("stock", goods.getStock());
 
@@ -209,9 +211,112 @@ public class BoardServiceImpl implements BoardService {
             Double originalPrice = goods.getOriginalPrice() == null ? goods.getPrice() : goods.getOriginalPrice();
             map.put("originalPrice", originalPrice);
 
+            String priceStatus = "平稳";
+            if(goods.getPrice() > originalPrice) {
+                priceStatus = "上涨";
+            }else if(goods.getPrice() < originalPrice) {
+                priceStatus = "下降";
+            }
+            map.put("priceStatus", priceStatus);
+
+
+            map.put("brandName", brandService.getByBrandsId(goods.getBrandId()).getName());
+            map.put("sellerName", sellersService.getBySellersId(goods.getSellerId()).getPublicName());
+
+            map.put("desc", goods.getDesc());
+
             list.add(map);
         }
+
+        Map resultMap = new HashMap();
+        resultMap.put("items", list);
+        resultMap.put("total", goodsService.getGoodsCount(""));
+        return resultMap;
+    }
+
+    @Override
+    public List<Map> getSyblings(String goodsId) {
+        List<Map> list = new ArrayList<>();
+
+        Goods goods = goodsService.getByGoodsId(goodsId);
+
+        if(goods != null) {
+            Map map = new HashMap();
+            map.put("goodsid", goods.getGoodsId());
+            map.put("name", goods.getName());
+            list.add(map);
+
+            for(Object obj : goods.getSyblings()) {
+                Map objMap = (Map)obj;
+                String syblingsId = (String)objMap.get("source_id");
+                Goods sgoods = goodsService.getByGoodsId(syblingsId);
+                if(sgoods != null) {
+                    map = new HashMap();
+                    map.put("goodsid", sgoods.getGoodsId());
+                    map.put("name", sgoods.getName());
+                    list.add(map);
+                }
+            }
+        }
+
         return list;
+    }
+
+    @Override
+    public Map getNotesList(int pageNumber, int pageSize) {
+        List<Map> list = new ArrayList<>();
+
+        List<Notes> notesList = notesService.getForPageList(pageNumber, pageSize,"insertDate");
+
+        int startNum = (pageNumber - 1) * pageSize;
+
+        for(Notes notes : notesList) {
+            startNum++;
+            Map map = new HashMap();
+            map.put("id", startNum);
+            map.put("notesid", notes.getNotesId());
+
+            map.put("images", notes.getImages());
+            map.put("title", notes.getTitle());
+            map.put("likes", notes.getLikes());
+            map.put("comments", notes.getComments());
+            map.put("favCount", notes.getFavCount());
+            map.put("time", notes.getTime());
+            map.put("updateDate", notes.getUpdateDate());
+            map.put("desc", notes.getDesc());
+            map.put("userName", usersService.getByUsersId(notes.getUserId()).getNickname());
+
+            list.add(map);
+        }
+
+        Map resultMap = new HashMap();
+        resultMap.put("items", list);
+        resultMap.put("total", notesService.getNotesCount(""));
+        return resultMap;
+    }
+
+    @Override
+    public Map test() {
+
+        Map map = new HashMap();
+        map.put("total", 1);
+        List<Map> list = new ArrayList<>();
+        Map cmap = new HashMap();
+        cmap.put("id", 1);
+        cmap.put("timestamp", "2017-09-27 10:10");
+        cmap.put("author", "zhangsan");
+        cmap.put("auditor", "lsi");
+        cmap.put("title", "xxxx");
+        cmap.put("forecast", "23.22");
+        cmap.put("importance", 2);
+        cmap.put("status", "published");
+        cmap.put("display_time", "2017-09-27 10:10");
+        cmap.put("pageviews", 400);
+
+        list.add(cmap);
+        map.put("items", list);
+
+        return map;
     }
 
     private String getCountryEname(String cname) {

@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/mongo/goods")
@@ -22,7 +24,7 @@ public class GoodsController {
 
     @GetMapping(value = "/getForPageList")
     public ResultVM getForPageList(){
-        List<Goods> list = goodsService.getForPageList(0,10,"insertDate");
+        List<Goods> list = goodsService.getForPageList(0,10,"");
         return ResultVM.ok(list);
     }
 
@@ -58,25 +60,25 @@ public class GoodsController {
 
     @GetMapping(value = "/getGoodsByDate")
     public ResultVM getGoodsByDate(String startDate,String endDate){
-        List<Goods> list = goodsService.getGoodsByDate(startDate,endDate);
+        List<Goods> list = goodsService.getGoodsByDate(startDate,endDate,0,10,"");
         return ResultVM.ok(list);
     }
 
     @GetMapping(value = "/getGoodsByBrandId")
     public ResultVM getGoodsByBrandId(@RequestParam String brandId){
-        List<Goods> list = goodsService.getGoodsByBrandId(brandId);
+        List<Goods> list = goodsService.getGoodsByBrandId(brandId,0,10,"");
         return ResultVM.ok(list);
     }
 
     @GetMapping(value = "/getGoodsBySellerId")
     public ResultVM getGoodsBySellerId(@RequestParam String sellerId){
-        List<Goods> list = goodsService.getGoodsBySellerId(sellerId);
+        List<Goods> list = goodsService.getGoodsBySellerId(sellerId,0,10,"");
         return ResultVM.ok(list);
     }
 
     @GetMapping(value = "/getGoodsByCategoryId")
     public ResultVM getGoodsByCategoryId(@RequestParam String categoryId){
-        List<Goods> list = goodsService.getGoodsByCategoryId(categoryId);
+        List<Goods> list = goodsService.getGoodsByCategoryId(categoryId,0,10,"");
         return ResultVM.ok(list);
     }
 
