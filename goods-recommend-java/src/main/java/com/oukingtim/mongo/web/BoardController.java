@@ -20,14 +20,12 @@ public class BoardController {
 
     @GetMapping(value = "/getGoodsAndNotesCount")
     public List<Map> getGoodsAndNotesCount() {
-        List<Map> list = boardService.getGoodsAndNotesCount();
-        return list;
+        return boardService.getGoodsAndNotesCount();
     }
 
     @GetMapping(value = "/getAllEventsCount")
     public List<Map> getAllEventsCount() {
-        List<Map> list = boardService.getAllEventsCount();
-        return list;
+        return boardService.getAllEventsCount();
     }
 
     @GetMapping(value = "/getGoodsTop")
@@ -64,8 +62,9 @@ public class BoardController {
     public List<Map> getBrandsList() { return boardService.getBrandsList(); }
 
     @GetMapping(value = "/getGoodsList")
-    public Map getGoodsList(@RequestParam int page, @RequestParam int limit) {
-        return boardService.getGoodsList(page, limit); }
+    public Map getGoodsList(@RequestParam int page,@RequestParam int limit,@RequestParam String title,
+                            @RequestParam String country, @RequestParam String sort) {
+        return boardService.getGoodsList(page,limit,title,country,sort); }
 
     @GetMapping(value = "/getSyblings")
     public List<Map> getSyblings(@RequestParam String goodsid) {
@@ -73,8 +72,9 @@ public class BoardController {
     }
 
     @GetMapping(value = "/getNotesList")
-    public Map getNotesList(@RequestParam int page, @RequestParam int limit) {
-        return boardService.getNotesList(page, limit); }
+    public Map getNotesList(@RequestParam int page,@RequestParam int limit,@RequestParam String title,
+                            @RequestParam String type, @RequestParam String sort) {
+        return boardService.getNotesList(page, limit,title,type,sort); }
 
     @GetMapping(value = "/test")
     public Map test() { return boardService.test(); }

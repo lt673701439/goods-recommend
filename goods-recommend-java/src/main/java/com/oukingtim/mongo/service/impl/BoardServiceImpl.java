@@ -5,6 +5,7 @@ import com.oukingtim.mongo.domain.Goods;
 import com.oukingtim.mongo.domain.Notes;
 import com.oukingtim.mongo.service.*;
 import com.oukingtim.util.DateUtils;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,8 +78,7 @@ public class BoardServiceImpl implements BoardService {
     public List<Map> getGoodsImage() {
         List<Goods> goodsList = goodsService.getForPageList(0,5,"insertDate");
         List<Map> list = new ArrayList<>();
-        for (int i = 0;i < goodsList.size();i++){
-            Goods goods = goodsList.get(i);
+        for (Goods goods : goodsList) {
             Map map = new HashMap();
             map.put("url", goods.getImage());
             map.put("description", goods.getShortName());
@@ -91,7 +91,7 @@ public class BoardServiceImpl implements BoardService {
     public List<Map> getGoodsCountryStat() {
         List<Goods> goodsList = goodsService.getForPageList(0,1000,"insertDate");
 
-        Map<String, Integer> countryCount = new HashMap<String, Integer>();
+        Map<String, Integer> countryCount = new HashMap<>();
         for (Goods goods : goodsList) {
             if(countryCount.containsKey(goods.getCountry())) {
                 countryCount.put(goods.getCountry(), countryCount.get(goods.getCountry()) + 1);
@@ -155,8 +155,7 @@ public class BoardServiceImpl implements BoardService {
     public List<Map> getNotesImage() {
         List<Notes> notesList = notesService.getForPageList(0,5,"insertDate");
         List<Map> list = new ArrayList<>();
-        for (int i = 0;i < notesList.size();i++){
-            Notes notes = notesList.get(i);
+        for (Notes notes : notesList) {
             Map map = new HashMap();
             map.put("url", notes.getImages());
             map.put("description", notes.getTitle());
@@ -180,13 +179,12 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Map getGoodsList(int pageNumber, int pageSize) {
+    public Map getGoodsList(int pageNumber, int pageSize,String title,String country,String sortType) {
         List<Map> list = new ArrayList<>();
 
-        List<Goods> goodsList = goodsService.getForPageList(pageNumber, pageSize,"insertDate");
-
+        Map<String, Object> returnMap = goodsService.getGoodsByCondition(pageNumber,pageSize,title,country,sortType);
         int startNum = (pageNumber - 1) * pageSize;
-
+        List<Goods> goodsList = (List<Goods>)returnMap.get("list");
         for(Goods goods : goodsList) {
             startNum++;
             Map map = new HashMap();
@@ -230,7 +228,7 @@ public class BoardServiceImpl implements BoardService {
 
         Map resultMap = new HashMap();
         resultMap.put("items", list);
-        resultMap.put("total", goodsService.getGoodsCount(""));
+        resultMap.put("total", returnMap.get("total"));
         return resultMap;
     }
 
@@ -263,13 +261,12 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Map getNotesList(int pageNumber, int pageSize) {
+    public Map getNotesList(int pageNumber, int pageSize,String title,String noteType,String sortType) {
         List<Map> list = new ArrayList<>();
 
-        List<Notes> notesList = notesService.getForPageList(pageNumber, pageSize,"insertDate");
-
+        Map<String, Object> returnMap = notesService.getNotesByCondition(pageNumber,pageSize,title,noteType,sortType);
         int startNum = (pageNumber - 1) * pageSize;
-
+        List<Notes> notesList = (List<Notes>)returnMap.get("list");
         for(Notes notes : notesList) {
             startNum++;
             Map map = new HashMap();
@@ -291,7 +288,7 @@ public class BoardServiceImpl implements BoardService {
 
         Map resultMap = new HashMap();
         resultMap.put("items", list);
-        resultMap.put("total", notesService.getNotesCount(""));
+        resultMap.put("total", returnMap.get("total"));
         return resultMap;
     }
 

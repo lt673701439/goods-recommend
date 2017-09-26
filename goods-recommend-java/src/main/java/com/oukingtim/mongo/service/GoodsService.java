@@ -11,7 +11,7 @@ public interface GoodsService {
 
     Goods getByGoodsId(String goodsId);
 
-    List<Goods> getGoodsByCondition(Map<String,Object> map);
+    Map<String ,Object> getGoodsByCondition(int pageNumber,int pageSize,String title,String country,String sortType);
 
     Long getGoodsCount(String date);
 

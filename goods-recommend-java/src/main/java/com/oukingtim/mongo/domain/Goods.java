@@ -26,6 +26,7 @@ public class Goods {
     @Field(value = "insert_date")
     private String insertDate;
 
+    @Field(value = "@timestamp")
     private String timestamp;
 
     @Field(value = "brand_id")

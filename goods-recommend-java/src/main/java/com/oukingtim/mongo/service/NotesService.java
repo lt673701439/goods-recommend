@@ -11,7 +11,7 @@ public interface NotesService {
 
     Notes getByNotesId(String notesId);
 
-    List<Notes> getNotesByCondition(Map<String, Object> map);
+    Map<String, Object> getNotesByCondition(int pageNumber,int pageSize,String title,String noteType,String sortType);
 
     Long getNotesCount(String date);
 

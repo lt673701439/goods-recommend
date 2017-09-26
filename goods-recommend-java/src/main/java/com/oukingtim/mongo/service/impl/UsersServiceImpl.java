@@ -2,8 +2,6 @@ package com.oukingtim.mongo.service.impl;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.oukingtim.mongo.domain.Users;
 import com.oukingtim.mongo.repository.UsersRepos;
 import com.oukingtim.mongo.service.UsersService;
@@ -12,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -41,12 +40,11 @@ public class UsersServiceImpl extends BaseServiceImpl implements UsersService {
                 + ".*$", Pattern.CASE_INSENSITIVE);//模糊查询
         basicDBObject.put("nickname", pattern);
         basicDBObject.put("fans_total", Integer.parseInt(map.get("fansTotal").toString()));//等值查询
-        DBCursor dbCursor = dbCollection.find(basicDBObject);
+        Iterator iterator = dbCollection.find(basicDBObject).iterator();
 
         List list = new ArrayList();
-        while (dbCursor.hasNext()) {
-            DBObject dbObject = dbCursor.next();
-            list.add(dbObject);
+        while (iterator.hasNext()) {
+            list.add(iterator.next());
         }
         return list;
     }

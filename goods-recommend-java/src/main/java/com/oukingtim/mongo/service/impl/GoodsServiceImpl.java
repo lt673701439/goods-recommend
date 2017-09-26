@@ -2,7 +2,6 @@ package com.oukingtim.mongo.service.impl;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.QueryOperators;
 import com.oukingtim.mongo.domain.Goods;
 import com.oukingtim.mongo.repository.GoodsRepos;
@@ -12,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
@@ -41,21 +37,30 @@ public class GoodsServiceImpl extends BaseServiceImpl implements GoodsService {
     }
 
     @Override
-    public List<Goods> getGoodsByCondition(Map<String, Object> map) {
-        DBCollection dbCollection = mongoTemplate.getCollection(Constants.Mongo.COLLECTION_GOODS);
-        BasicDBObject basicDBObject = new BasicDBObject();
-
-        Pattern pattern = Pattern.compile("^.*" + map.get("feature")
-                + ".*$", Pattern.CASE_INSENSITIVE);//模糊查询
-        basicDBObject.put("feature", pattern);
-        basicDBObject.put("stock", Integer.parseInt(map.get("stock").toString()));//等值查询
-        DBCursor dbCursor = dbCollection.find(basicDBObject);
-
-        List<Goods> list = new ArrayList();
-        while (dbCursor.hasNext()) {
-            list.add((Goods)dbCursor.next());
+    public Map<String, Object> getGoodsByCondition(int pageNumber, int pageSize, String title,
+                                                   String country, String sortType) {
+        PageRequest pageRequest = super.getPageRequest(pageNumber, pageSize, sortType);
+        List list = new ArrayList();
+        Long total;
+        if ("".equals(title) && "".equals(country)) {
+            list = this.getForPageList(pageNumber, pageSize, sortType);
+            total = goodsRepos.count();//总数
+        } else if ("".equals(country)) {
+            for (Object o : goodsRepos.getByNameLike(title, pageRequest)) {
+                list.add(o);
+            }
+            total = goodsRepos.countByNameLike(title);//总数
+        } else {
+            for (Object o : goodsRepos.getByNameLikeAndCountry(title, country, pageRequest)) {
+                list.add(o);
+            }
+            total = goodsRepos.countByNameLikeAndCountry(title, country);//总数
         }
-        return list;
+        Map resultMap = new HashMap();
+
+        resultMap.put("list", list);
+        resultMap.put("total", total);
+        return resultMap;
     }
 
     @Override
@@ -66,8 +71,7 @@ public class GoodsServiceImpl extends BaseServiceImpl implements GoodsService {
             BasicDBObject basicDBObject;
             basicDBObject = new BasicDBObject().append("insert_date",
                     new BasicDBObject().append(QueryOperators.GTE, date));
-            DBCursor dbCursor = dbCollection.find(basicDBObject);
-            return (long) dbCursor.count();
+            return dbCollection.count(basicDBObject);
         } else {
             return goodsRepos.count();
         }
@@ -75,14 +79,14 @@ public class GoodsServiceImpl extends BaseServiceImpl implements GoodsService {
     }
 
     @Override
-    public List<Goods> getGoodsByDate(String startDate,String endDate,int pageNumber,int pageSize,String sortType) {
-        return super.getByDate(Constants.Mongo.COLLECTION_GOODS,startDate,endDate,pageNumber,pageSize,sortType);
+    public List<Goods> getGoodsByDate(String startDate, String endDate, int pageNumber, int pageSize, String sortType) {
+        return super.getByDate(Constants.Mongo.COLLECTION_GOODS, startDate, endDate, pageNumber, pageSize, sortType);
     }
 
     @Override
-    public List<Goods> getGoodsByBrandId(String brandId,int pageNumber, int pageSize, String sortType) {
+    public List<Goods> getGoodsByBrandId(String brandId, int pageNumber, int pageSize, String sortType) {
         PageRequest pageRequest = super.getPageRequest(pageNumber, pageSize, sortType);
-        Iterator iterator = goodsRepos.getGoodsByBrandId(brandId,pageRequest).iterator();
+        Iterator iterator = goodsRepos.getGoodsByBrandId(brandId, pageRequest).iterator();
         List<Goods> list = new ArrayList();
         while (iterator.hasNext()) {
             list.add((Goods) iterator.next());
@@ -91,9 +95,9 @@ public class GoodsServiceImpl extends BaseServiceImpl implements GoodsService {
     }
 
     @Override
-    public List<Goods> getGoodsBySellerId(String sellerId,int pageNumber, int pageSize, String sortType) {
+    public List<Goods> getGoodsBySellerId(String sellerId, int pageNumber, int pageSize, String sortType) {
         PageRequest pageRequest = super.getPageRequest(pageNumber, pageSize, sortType);
-        Iterator iterator = goodsRepos.getGoodsBySellerId(sellerId,pageRequest).iterator();
+        Iterator iterator = goodsRepos.getGoodsBySellerId(sellerId, pageRequest).iterator();
         List<Goods> list = new ArrayList();
         while (iterator.hasNext()) {
             list.add((Goods) iterator.next());
@@ -102,9 +106,9 @@ public class GoodsServiceImpl extends BaseServiceImpl implements GoodsService {
     }
 
     @Override
-    public List<Goods> getGoodsByCategoryId(String categoryId,int pageNumber,int pageSize,String sortType) {
+    public List<Goods> getGoodsByCategoryId(String categoryId, int pageNumber, int pageSize, String sortType) {
         PageRequest pageRequest = super.getPageRequest(pageNumber, pageSize, sortType);
-        Iterator iterator = goodsRepos.getGoodsByCategoryId(categoryId,pageRequest).iterator();
+        Iterator iterator = goodsRepos.getGoodsByCategoryId(categoryId, pageRequest).iterator();
         List<Goods> list = new ArrayList();
         while (iterator.hasNext()) {
             list.add((Goods) iterator.next());

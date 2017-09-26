@@ -2,7 +2,6 @@ package com.oukingtim.mongo.service.impl;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.QueryOperators;
 import com.oukingtim.mongo.domain.Notes;
 import com.oukingtim.mongo.repository.NotesRepos;
@@ -12,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
@@ -41,21 +37,29 @@ public class NotesServiceImpl extends BaseServiceImpl implements NotesService {
     }
 
     @Override
-    public List<Notes> getNotesByCondition(Map<String, Object> map) {
-        DBCollection dbCollection = mongoTemplate.getCollection(Constants.Mongo.COLLECTION_NOTES);
-        BasicDBObject basicDBObject = new BasicDBObject();
-
-        Pattern pattern = Pattern.compile("^.*" + map.get("title")
-                + ".*$", Pattern.CASE_INSENSITIVE);//模糊查询
-        basicDBObject.put("title", pattern);
-        basicDBObject.put("item_type", map.get("itemType").toString());//等值查询
-        DBCursor dbCursor = dbCollection.find(basicDBObject);
-
-        List<Notes> list = new ArrayList();
-        while (dbCursor.hasNext()) {
-            list.add((Notes) dbCursor.next());
+    public Map<String, Object> getNotesByCondition(int pageNumber,int pageSize,String title,String noteType,String sortType) {
+        PageRequest pageRequest = super.getPageRequest(pageNumber, pageSize, sortType);
+        List list = new ArrayList();
+        Long total;
+        if("".equals(title) && "".equals(noteType)){
+            list = this.getForPageList(pageNumber,pageSize,sortType);
+            total = notesRepos.count();//总数
+        } else if ("".equals(noteType)) {
+            for (Object o : notesRepos.getByTitleLike(title, pageRequest)) {
+                list.add(o);
+            }
+            total = notesRepos.countByTitleLike(title);//总数
+        }else {
+            for (Object o : notesRepos.getByTitleLikeAndNoteType(title, noteType, pageRequest)) {
+                list.add(o);
+            }
+            total = notesRepos.countByTitleLikeAndNoteType(title,noteType);//总数
         }
-        return list;
+        Map resultMap = new HashMap();
+
+        resultMap.put("list",list);
+        resultMap.put("total",total);
+        return resultMap;
     }
 
     @Override
@@ -66,8 +70,7 @@ public class NotesServiceImpl extends BaseServiceImpl implements NotesService {
             BasicDBObject basicDBObject;
             basicDBObject = new BasicDBObject().append("insert_date",
                     new BasicDBObject().append(QueryOperators.GTE, date));
-            DBCursor dbCursor = dbCollection.find(basicDBObject);
-            return (long) dbCursor.count();
+            return dbCollection.count(basicDBObject);
         } else {
             return notesRepos.count();
         }

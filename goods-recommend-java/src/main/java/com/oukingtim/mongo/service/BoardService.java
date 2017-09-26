@@ -23,11 +23,11 @@ public interface BoardService {
 
     List<Map> getBrandsList();
 
-    Map getGoodsList(int pageNumber, int pageSize);
+    Map getGoodsList(int pageNumber, int pageSize,String title,String country,String sortType);
 
     List<Map> getSyblings(String goodsId);
 
-    Map getNotesList(int pageNumber, int pageSize);
+    Map getNotesList(int pageNumber, int pageSize,String title,String noteType,String sortType);
 
     Map test();
 }

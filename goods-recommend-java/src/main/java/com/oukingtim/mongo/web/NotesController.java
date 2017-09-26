@@ -24,7 +24,7 @@ public class NotesController {
 
     @GetMapping(value = "/getForPageList")
     public ResultVM getForPageList(){
-        List<Notes> list = notesService.getForPageList(0,10,"");
+        List<Notes> list = notesService.getForPageList(1,10,"");
         return ResultVM.ok(list);
     }
 
@@ -35,9 +35,10 @@ public class NotesController {
     }
 
     @GetMapping(value = "/getNotesByCondition")
-    public ResultVM getNotesByCondition(@RequestParam Map<String,Object> map){
-        List<Notes> list = notesService.getNotesByCondition(map);
-        return ResultVM.ok(list);
+    public Map<String ,Object> getNotesByCondition(@RequestParam int pageNumber,@RequestParam int pageSize,
+                                        @RequestParam String title,@RequestParam String type,
+                                        @RequestParam String sort){
+        return notesService.getNotesByCondition(pageNumber,pageSize,title,type,sort);
     }
 
     @GetMapping(value = "/getNotesCount")
@@ -60,7 +61,7 @@ public class NotesController {
 
     @GetMapping(value = "/getNotesByDate")
     public ResultVM getNotesByDate(String startDate,String endDate){
-        List<Notes> list = notesService.getNotesByDate(startDate,endDate,0,10,"");
+        List<Notes> list = notesService.getNotesByDate(startDate,endDate,1,10,"");
         return ResultVM.ok(list);
     }
 

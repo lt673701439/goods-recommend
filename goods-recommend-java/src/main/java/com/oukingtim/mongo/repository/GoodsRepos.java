@@ -17,4 +17,12 @@ public interface GoodsRepos extends MongoRepository<Goods, String> {
 
     Page<Goods> getGoodsByCategoryId(String categoryId, Pageable pageable);
 
+    Page<Goods> getByNameLikeAndCountry(String name,String country, Pageable pageable);
+
+    Long countByNameLikeAndCountry(String name,String country);
+
+    Page<Goods> getByNameLike(String name, Pageable pageable);
+
+    Long countByNameLike(String name);
+
 }

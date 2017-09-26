@@ -2,7 +2,6 @@ package com.oukingtim.mongo.service.impl;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.oukingtim.mongo.domain.Brands;
 import com.oukingtim.mongo.repository.BrandsRepos;
 import com.oukingtim.mongo.service.BrandsService;
@@ -27,9 +26,9 @@ public class BrandsServiceImpl extends BaseServiceImpl implements BrandsService 
     public List<Brands> getForPageList(int pageNumber, int pageSize, String sortType) {
         PageRequest pageRequest = super.getPageRequest(pageNumber, pageSize, sortType);
         Iterator iterator = brandsRepos.findAll(pageRequest).iterator();
-        List<Brands> list = new ArrayList();
+        List list = new ArrayList();
         while (iterator.hasNext()) {
-            list.add((Brands) iterator.next());
+            list.add(iterator.next());
         }
         return list;
     }
@@ -48,11 +47,11 @@ public class BrandsServiceImpl extends BaseServiceImpl implements BrandsService 
                 + ".*$", Pattern.CASE_INSENSITIVE);//模糊查询
         basicDBObject.put("name", pattern);
         basicDBObject.put("area", map.get("area").toString());//等值查询
-        DBCursor dbCursor = dbCollection.find(basicDBObject);
+        Iterator iterator = dbCollection.find(basicDBObject).iterator();
 
-        List<Brands> list = new ArrayList();
-        while (dbCursor.hasNext()) {
-            list.add((Brands) dbCursor.next());
+        List list = new ArrayList();
+        while (iterator.hasNext()) {
+            list.add(iterator.next());
         }
         return list;
     }

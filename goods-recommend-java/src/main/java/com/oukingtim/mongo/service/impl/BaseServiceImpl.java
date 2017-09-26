@@ -1,6 +1,8 @@
 package com.oukingtim.mongo.service.impl;
 
-import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.QueryOperators;
 import com.oukingtim.mongo.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -9,6 +11,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -19,14 +22,14 @@ class BaseServiceImpl implements BaseService {
 
     @Override
     public PageRequest getPageRequest(int pageNumber, int pageSize, String sortType) {
-        //处理排序，排序字段需要与VO中的field别名相同，-1倒序，1正序
+        //处理排序
         Sort sort;
-        if ("".equals(sortType)) {
-            sort = new Sort(Sort.Direction.DESC, "insert_date");
+        if (sortType == null || "".equals(sortType)) {
+            sort = new Sort(Sort.Direction.DESC, "insertDate");
         } else {
             sort = new Sort(Sort.Direction.DESC, sortType);
         }
-        return new PageRequest(pageNumber, pageSize, sort);
+        return new PageRequest(pageNumber-1, pageSize, sort);
     }
 
     @Override
@@ -35,24 +38,24 @@ class BaseServiceImpl implements BaseService {
         DBCollection dbCollection = mongoTemplate.getCollection(collectionName);
         //处理条件
         BasicDBObject basicDBObject = new BasicDBObject();
-        if (!"".equals(startDate)) {
+        if (startDate != null && !"".equals(startDate)) {
             basicDBObject.put(QueryOperators.GTE, startDate);
         }
-        if (!"".equals(endDate)) {
+        if (endDate != null && !"".equals(endDate)) {
             basicDBObject.put(QueryOperators.LTE, endDate);
         }
         BasicDBObject searchObj = new BasicDBObject();
         searchObj.put("insert_date", basicDBObject);
-        //处理排序，排序字段需要与VO中的field别名相同，-1倒序，1正序
+        //处理排序,字段要与VO的field对应
         BasicDBObject sort;
-        if ("".equals(sortType)) {
-            sort = new BasicDBObject("insert_date", -1);
+        if (sortType == null || "".equals(sortType)) {
+            sort = new BasicDBObject("insertDate", -1);
         } else {
             sort = new BasicDBObject(sortType, -1);
         }
-        DBCursor dbCursor = dbCollection.find(searchObj).sort(sort).skip((pageNumber) * pageSize).limit(pageSize);
-        while (dbCursor.hasNext()) {
-            list.add(dbCursor.next());
+        Iterator iterator = dbCollection.find(searchObj).sort(sort).skip((pageNumber-1) * pageSize).limit(pageSize).iterator();
+        while (iterator.hasNext()) {
+            list.add(iterator.next());
         }
         return list;
     }

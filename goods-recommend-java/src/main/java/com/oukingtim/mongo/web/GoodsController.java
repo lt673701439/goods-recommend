@@ -24,7 +24,7 @@ public class GoodsController {
 
     @GetMapping(value = "/getForPageList")
     public ResultVM getForPageList(){
-        List<Goods> list = goodsService.getForPageList(0,10,"");
+        List<Goods> list = goodsService.getForPageList(1,10,"");
         return ResultVM.ok(list);
     }
 
@@ -35,9 +35,10 @@ public class GoodsController {
     }
 
     @GetMapping(value = "/getGoodsByCondition")
-    public ResultVM getGoodsByCondition(@RequestParam Map<String,Object> map){
-        List<Goods> list = goodsService.getGoodsByCondition(map);
-        return ResultVM.ok(list);
+    public Map<String ,Object> getGoodsByCondition(@RequestParam int page,@RequestParam int limit,
+                                                   @RequestParam String title,@RequestParam String country,
+                                                   @RequestParam String sort){
+        return goodsService.getGoodsByCondition(page,limit,title,country,sort);
     }
 
     @GetMapping(value = "/getGoodsCount")
@@ -60,25 +61,25 @@ public class GoodsController {
 
     @GetMapping(value = "/getGoodsByDate")
     public ResultVM getGoodsByDate(String startDate,String endDate){
-        List<Goods> list = goodsService.getGoodsByDate(startDate,endDate,0,10,"");
+        List<Goods> list = goodsService.getGoodsByDate(startDate,endDate,1,10,"");
         return ResultVM.ok(list);
     }
 
     @GetMapping(value = "/getGoodsByBrandId")
     public ResultVM getGoodsByBrandId(@RequestParam String brandId){
-        List<Goods> list = goodsService.getGoodsByBrandId(brandId,0,10,"");
+        List<Goods> list = goodsService.getGoodsByBrandId(brandId,1,10,"");
         return ResultVM.ok(list);
     }
 
     @GetMapping(value = "/getGoodsBySellerId")
     public ResultVM getGoodsBySellerId(@RequestParam String sellerId){
-        List<Goods> list = goodsService.getGoodsBySellerId(sellerId,0,10,"");
+        List<Goods> list = goodsService.getGoodsBySellerId(sellerId,1,10,"");
         return ResultVM.ok(list);
     }
 
     @GetMapping(value = "/getGoodsByCategoryId")
     public ResultVM getGoodsByCategoryId(@RequestParam String categoryId){
-        List<Goods> list = goodsService.getGoodsByCategoryId(categoryId,0,10,"");
+        List<Goods> list = goodsService.getGoodsByCategoryId(categoryId,1,10,"");
         return ResultVM.ok(list);
     }
 

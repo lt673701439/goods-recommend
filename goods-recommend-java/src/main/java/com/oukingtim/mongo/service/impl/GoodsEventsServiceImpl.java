@@ -1,6 +1,8 @@
 package com.oukingtim.mongo.service.impl;
 
-import com.mongodb.*;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.QueryOperators;
 import com.oukingtim.mongo.domain.GoodsEvents;
 import com.oukingtim.mongo.repository.GoodsEventsRepos;
 import com.oukingtim.mongo.service.GoodsEventsService;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -34,12 +37,11 @@ public class GoodsEventsServiceImpl extends BaseServiceImpl implements GoodsEven
         BasicDBObject basicDBObject = new BasicDBObject();
 
         basicDBObject.put("stock", Integer.parseInt(map.get("stock").toString()));//等值查询
-        DBCursor dbCursor = dbCollection.find(basicDBObject);
+        Iterator iterator = dbCollection.find(basicDBObject).iterator();
 
         List list = new ArrayList();
-        while (dbCursor.hasNext()) {
-            DBObject dbObject = dbCursor.next();
-            list.add(dbObject);
+        while (iterator.hasNext()) {
+            list.add(iterator.next());
         }
         return list;
     }
@@ -52,8 +54,7 @@ public class GoodsEventsServiceImpl extends BaseServiceImpl implements GoodsEven
             BasicDBObject basicDBObject;
             basicDBObject = new BasicDBObject().append("insert_date",
                     new BasicDBObject().append(QueryOperators.GTE, date));
-            DBCursor dbCursor = dbCollection.find(basicDBObject);
-            return (long) dbCursor.count();
+            return dbCollection.count(basicDBObject);
         } else {
             return goodsEventsRepos.count();
         }

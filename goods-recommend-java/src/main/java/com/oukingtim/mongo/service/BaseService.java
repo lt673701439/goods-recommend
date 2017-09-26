@@ -9,7 +9,7 @@ public interface BaseService {
     /**
      * 获取带排序的分页请求
      *
-     * @param pageNumber 请求页数，zero-based page index.
+     * @param pageNumber 请求页数
      * @param pageSize   分页大小
      * @param sortType   排序方式，排序字段需要与VO中的field别名相同
      * @return 结果集
@@ -21,7 +21,7 @@ public interface BaseService {
      * @param collectionName 集合名称
      * @param startDate 开始时间
      * @param endDate 结束时间
-     * @param pageNumber 请求页数，zero-based page index.
+     * @param pageNumber 请求页数
      * @param pageSize   分页大小
      * @param sortType   排序方式，排序字段需要与VO中的field别名相同
      * @return 结果集
