@@ -2,7 +2,7 @@ import fetch from '@/utils/fetch'
 
 export function fetchList(query) {
   return fetch({
-    url: 'http://localhost:8080/mongo/board/getNotesList',
+    url: '/api/mongo/board/getNotesList',
     method: 'get',
     params: query
   })

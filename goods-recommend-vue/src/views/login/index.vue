@@ -37,7 +37,8 @@
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
+// import { isvalidUsername } from '@/utils/validate'
+// import { loginByUsername } from '@/api/login'
 import socialSign from './socialsignin'
 
 export default {
@@ -45,15 +46,17 @@ export default {
   name: 'login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
+      // if (!isvalidUsername(value)) {
+      if (value === '') {
         callback(new Error('请输入正确的用户名'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('密码不能小于6位'))
+      // if (value.length < 6) {
+      if (value === '') {
+        callback(new Error('密码不能小于1位'))
       } else {
         callback()
       }
@@ -61,7 +64,7 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: '1111111'
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],

@@ -1,5 +1,6 @@
 import { loginByUsername, logout, getUserInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+import { Message } from 'element-ui'
 
 const user = {
   state: {
@@ -50,9 +51,18 @@ const user = {
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
           const data = response.data
-          setToken(response.data.token)
-          commit('SET_TOKEN', data.token)
-          resolve()
+          if (data.code === 0) {
+            setToken(username)
+            commit('SET_TOKEN', username)
+            resolve()
+          } else {
+            Message({
+              message: data.msg,
+              type: 'error',
+              duration: 3 * 1000
+            })
+            reject(data.msg)
+          }
         }).catch(error => {
           reject(error)
         })
@@ -64,11 +74,28 @@ const user = {
       return new Promise((resolve, reject) => {
         getUserInfo(state.token).then(response => {
           const data = response.data
-          commit('SET_ROLES', data.role)
-          commit('SET_NAME', data.name)
-          commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
-          resolve(response)
+          if (data.code === 0) {
+            commit('SET_NAME', data.result.user.username)
+            commit('SET_ROLES', data.result.perms)
+            resolve(response)
+          } else if (data.code === 500) {
+            console.log(data.msg)
+            this.LogOut().then(() => {
+              location.reload()// 为了重新实例化vue-router对象 避免bug
+            })
+          } else {
+            Message({
+              message: data.msg,
+              type: 'error',
+              duration: 3 * 1000
+            })
+            reject(data.msg)
+          // commit('SET_ROLES', data.role)
+          // commit('SET_NAME', data.name)
+          // commit('SET_AVATAR', data.avatar)
+          // commit('SET_INTRODUCTION', data.introduction)
+          // resolve(response)
+          }
         }).catch(error => {
           reject(error)
         })

@@ -2,7 +2,7 @@ import fetch from '@/utils/fetch'
 
 export function fetchList(query) {
   return fetch({
-    url: 'http://localhost:8080/mongo/board/getGoodsList',
+    url: '/api/mongo/board/getGoodsList',
     method: 'get',
     params: query
   })
@@ -10,7 +10,7 @@ export function fetchList(query) {
 
 export function fetchSyblings(goodsid) {
   return fetch({
-    url: 'http://localhost:8080/mongo/board/getSyblings',
+    url: '/api/mongo/board/getSyblings',
     method: 'get',
     params: { goodsid }
   })
